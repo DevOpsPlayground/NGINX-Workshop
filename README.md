@@ -38,22 +38,13 @@ In your terminal:
 
     sudo amazon-linux-extras install nginx1
 
-This installs NGINX and, by default, starts NGINX on your machine.
+This installs NGINX on your machine.
 
 ## 1.2 
-We can see that NGINX is running with this command:
+Check it has installed:
 
-    ps -ef |grep nginx
+    nginx -v
 
-The default 'master' and 'worker' process run by default, but for this workshop, these processes should be stopped.
-
-## 1.3 
-Kill NGINX by getting each PID from step 1.2 :
-
-    sudo kill -9 <the PID of the master nginx process>
-    sudo kill -9 <the PID of the worker nginx processes>
-
-This means we can now start and stop NGINX when we want to.
 
 # 2. Try out some commands
 
@@ -65,27 +56,34 @@ To start nginx:
 Go to your browser and see the default web page being served.
 
 ## 2.2 
+We can see whether NGINX is running with this command:
+
+    ps -ef |grep nginx
+
+The 'master' and 'worker' processes run by default.
+
+## 2.3
 While NGINX is running, we send further commands with the -s "signal" flag. To stop nginx gracefully:
 
     sudo nginx -s quit
 
-## 2.3 
+## 2.4
 To stop nginx forcefully:
 
     sudo nginx -s stop
 
-## 2.4 
+## 2.5
 To see access logs (start nginx first):
 
-    sudo tail -f /var/log/nginx/access.log
+    tail -f /var/log/nginx/access.log
 
-## 2.5 
+## 2.6
 Try reloading the page, or accessing it from another device. Notice the logs.
 
 From your own terminal, let's compare 
 
-    curl http://54.217.161.86
-    curl http://54.217.161.86 -X POST
+    curl [your-pandname].devopsplayground.org
+    curl [your-pandname].devopsplayground.org -X POST
 
 Look at the access logs, you can see the GET request was ok, but POST request 'Not Allowed'
 Why is this? Where is this behaviour configured? Can we change this behaviour?
@@ -112,8 +110,8 @@ In the **'/project/config'** directory of your Code editor, **create a new file 
 ### 3.2.2 
 Insert (copy + paste) this code into mynginx.conf:
 
-    user ec2-user;
-
+    user playground;
+    
     http {
         server {
             listen 80;
@@ -127,31 +125,34 @@ Insert (copy + paste) this code into mynginx.conf:
 Save this (command + s)
 
 ### 3.2.4 
-In your terminal:
+In your terminal, set liberal permissions to edit nginx.conf:
 
-    cat ~/NGINX-Workshop/config/mynginx.conf > /etc/nginx/nginx.conf
+    sudo chmod 777 /etc/nginx/nginx.conf
 
-### 3.2.5 
+### 3.2.5
+Overwrite the contents of nginx.conf with your mynginx.conf:
+
+    cat ~/workdir/NGINX-Workshop/config/mynginx.conf > /etc/nginx/nginx.conf
+
+### 3.2.6 
 Check this was successful:
 
     cat /etc/nginx/nginx.conf
 
-Check your browser, we should have the same result as before. So what can we change?
+Check your browser, we should have the same result as before. (Check you started NGINX first).
 
-## 3.3 
+So what can we change?
+
+# 4. Serve your own web content
+
 Observe the line **root /usr/share/nginx/html;**. 
 
 This single single key-pair, separated by a space and punctuated with a semi-colon is known as a 'directive'. 
 
 This directive tells NGINX which folder to look in when serving web content (html, css, javascript, php etc.)
 
-## 3.4 
-Observe the **listen** directive. This tells NGINX which port to listen on.
-
-# 4. Serve your own web content
-
 ## 4.1 
-In your code editor create a folder inside /project called 'public'.
+In your code editor create a folder inside /NGINX-Workshop called 'public'.
 
 ## 4.2 
 Inside /public create an index.html file.
@@ -175,12 +176,12 @@ Add the following html (or some thing similarly basic)
 
 and, in nginx.conf, change the root directive;
 
-    user ec2-user;
+    user playground;
     
     http {
         server {
             listen 80;
-            root /home/ec2-user/NGINX-Workshop/public;
+            root /home/playground/workdir/NGINX-Workshop/public;
         }
     }
 
@@ -191,7 +192,7 @@ Check your browser. What happened? Why wasn't the page updated?
 
 Nothing has changed because we haven't told NGINX to 'reload' the contents of the config file.
 
-    cat ~/NGINX-Workshop/config/mynginx.conf > /etc/nginx/nginx.conf
+    cat ~/workdir/NGINX-Workshop/config/mynginx.conf > /etc/nginx/nginx.conf
     nginx -s reload
 
 Reload, then check your browser.
@@ -201,25 +202,6 @@ Reload, then check your browser.
 What if you want to serve multiple pages eg /, /cart, /shipping, /contact ...
 
 ## 5.1 
-Add a location context to nginx.conf:
-
-    user ec2-user;
-    
-    http {
-        server {
-            listen 80;
-            root /home/ec2-user/NGINX-Workshop/public;
-
-            location /cart {
-                root /home/ec2-user/NGINX-Workshop/public;
-                try_files /cart.html =404;
-            }
-        }
-    }
-
-    events {}
-
-## 5.2 
 Add a new html file inside /public called cart.html:
 
     <!DOCTYPE html>
@@ -242,6 +224,26 @@ Add a new html file inside /public called cart.html:
     </body>
     </html>
 
+## 5.2 
+Add a location context to nginx.conf:
+
+    user playground;
+    
+    http {
+        server {
+            listen 80;
+            root /home/playground/workdir/NGINX-Workshop/public;
+
+            location /cart {
+                root /home/playground/workdir/NGINX-Workshop/public;
+                try_files /cart.html =404;
+            }
+        }
+    }
+
+    events {}
+
+
 Reload, 
 
     cat ~/NGINX-Workshop/config/mynginx.conf > /etc/nginx/nginx.conf
@@ -254,15 +256,15 @@ So what if we want mutliple pages? Multiple location contexts? Is there is a cle
 ## 5.3 
 Update your nginx.conf with this:
 
-    user ec2-user;
+    user playground;
 
     http {
         server {
             listen 80;
-            root /NGINX-Workshop/public;
+            root /home/playground/workdir/NGINX-Workshop/public;
 
             location / {
-                root /home/ec2-user/NGINX-Workshop/public;
+                root /home/playground/workdir/NGINX-Workshop/public;
             }
         }
     }
@@ -327,10 +329,10 @@ public/about/index.html
 
 Then, check the following in your browser
 
-- [your_ip]
-- [your_ip]/cart.html
-- [your_ip]/cart
-- [your_ip]/about
+- [your_pandaname].devopsplayground.org
+- [your_pandaname].devopsplayground.org/cart.html
+- [your_pandaname].devopsplayground.org/cart
+- [your_pandaname].devopsplayground.org/about
 
 # 5 Serving other files
 
@@ -376,23 +378,39 @@ In each index.html file, **add the links to styles.css and script.js** eg:
     </body>
     </html>
 
-## 5.3 
+## 5.3
+In each styles.css file, **add some super-basic styling** so we can do a sense-check.
+
+styles.css:
+
+    h1 {
+        color: <choose a color>
+    }
+
+## 5.4
+In each script.js file, **add a console.log message** so we can do a sense-check.
+
+script.js:
+
+    console.log("script loaded successfully")
+
+## 5.5 
 Check each route in your browser. Huh?
 
-Using the 'inspect' tool, looking at 'sources', we can see that 'styles.css' and script.js was loaded but styles have not been aplied and (depending on your browser) the script might not have loaded. So what's going on?
+Using the 'inspect' tool, looking at 'sources', we can see that 'styles.css' and script.js were loaded but styles have not been applied and (depending on your browser) the script might not have loaded. So what's going on?
 
-## 5.4 
+## 5.6 
 Let's talk about MIME types!
 
 MIME types describe the media type of content served by web servers or web applications. They are intended to help provide a hint as to how the content should be processed and displayed. These days, most browsers have the ability to 'guess' the intention of a file by either scanning it or looking at its file extension, but this is not widely applied for reasons of security and loss of control.
 
 TLDR - We need to tell the browser, when the content loads, which type of files (other than text/html) to accept.
 
-## 5.5 
+## 5.7 
 Add the following to nginx.conf:
 
 
-    user ec2-user;
+    user playground;
 
     http {
 
@@ -400,10 +418,10 @@ Add the following to nginx.conf:
 
         server {
             listen 80;
-            root /NGINX-Workshop/public;
+            root /home/playground/workdir/NGINX-Workshop/public;
 
             location / {
-                root /home/ec2-user/NGINX-Workshop/public;
+                root /home/playground/workdir/NGINX-Workshop/public;
             }
         }
     }
@@ -420,20 +438,20 @@ Diagram --> multiple backend 'worker' servers reached by one NGINX endpoint.
 
 The use a of a loadbalancer is a common way to increase capacity, and the simplest way of managing this is a 'round robin' algorithm, where traffic is directed to the next backend worker each time a new request comes in.
 
-To do this, you could spin up multiple 'worker' hosts to learn with, but a far more cost-effective way to do this is using docker. Docker can create a virtual network of hosts, essentially a VPC that runs on your own machine.
+We could spin up multiple 'worker' hosts to see this in action, but a far more cost-effective way is using docker. Docker can create a virtual network of hosts, essentially a VPC that runs on your own machine.
 
 ## 6.1 
 Stop NGINX on your machine:
 
-    nginx -s quit
+    sudo nginx -s quit
 
 ## 6.2 
 Change directory into /loadbalancer
 
-    cd loadbalancer
+    cd workdir/NGINX-Workshop/loadbalancer
 
 ## 6.3 
-Click through the files in /loabalancer to check what's happening:
+In your code-editor, click through the files in /loabalancer to check what's happening:
 
 In **docker-compose.yml** ...
 
@@ -448,7 +466,7 @@ The three express.js backend workers will run as three separate hosts (although 
 
 In **/server** ...
 
-- A Dockerfile builds a Node JS container, with express.js installed and our server.js file.
+- A Dockerfile builds a Node JS container, with express.js installed and starts the server.
 - For this demo, server.js simply returns some plain text on receiving a GET request.
 
 In **nginx.conf** ...
@@ -467,15 +485,16 @@ For now, this will return something simple, too.
         }
     }
 
-events {}
+    events {}
 
 ## 6.4 
-Startup this network with docker compose:
+In your terminal, startup this network with docker compose:
 
     docker compose up
 
-After a few seconds, you will see that all four containers have started.
-If you go to your browser, you will see something very uninteresting.
+After a few seconds, you will see that all four containers have started. (This is much quicker after the first build)
+
+If you go to your browser, you will see something reassuring, but very uninteresting.
 
 ## 6.5 
 Enable reverse-proxy:
@@ -507,12 +526,12 @@ or, in a separate terminal
 
     docker-compose down && docker-compose up
 
-Now if you go to your browser, you will see something *slightly* more interesting. 
+Now if you go to your browser, you will see something *slightly* more interesting. The request was forwarded to worker 1 and returned to us.
 
 ## 6.6 
 Enable loadbalancing:
 
-For this, we declare a list of known backend hosts. We nginx stores this list as a variable now, so we could call it any string, but this example uses 'backend_hosts'.
+For this, we declare a list of known backend hosts. NGINX stores this list as a variable now, so we could name it any string, but this example uses the name 'backend_hosts'.
 
 Then, in the location context, we proxy the requests using the $backend_hosts variable.
 
@@ -537,10 +556,10 @@ Update loadbalancer/nginx.conf to look like this:
 
     events {}
 
-Restart the containers and check your browser. Wow!
+Restart the containers and check your browser. Refresh the page a few times. Wow!
 
 ## 6.7 Control the backend routing
-If we want to specify which backend service to use, depending on the request path (instead of NGINX choosing for us), we can use a 'map' context.
+If we want to control which backend service to use, depending on the request path (instead of NGINX choosing for us), we can use a 'map' context.
 
 Update loadbalancer/nginx.conf to look like this:
 
@@ -571,24 +590,32 @@ http {
 
     events {}
 
+And check the following routes
+
+- [your_pandaname].devopsplayground.org
+- [your_pandaname].devopsplayground.org/first
+- [your_pandaname].devopsplayground.org/second
+- [your_pandaname].devopsplayground.org/third
+- [your_pandaname].devopsplayground.org/anything-else
+
 # 7 NGINX for microservice apps
 
 With the steps in (6), you know enough to envisage NGINX being used as a kind of API Gateway - a single server that manages the routing to multiple other backend services. These services could serve any kind of data including .json, images and videos.
 
 Loadbalancing and backend routing are very useful features of NGINX from an infrastructure and performance perspective, obviously. But next we're going to look at something more DevOps minded.
 
-To push infra/ops to he left, one approach we can take is a microservice architecture - the use of multiple backend services to be consumed by a single application. This allows two things to happen. First, it allows for good separation of concerns ( the upshot being smaller, more agile components that can be updated in iterations independently of other components). Second, it means up-scaling of capacity can be targeted to the backend services that are seeing the most activity.
+To push infra/ops to the left, one approach we can take is a microservice architecture - the use of multiple backend services to be consumed by a single application. This has many DevOps advantages. First, good separation of concerns means smaller, more agile components that can be frequently updated in iterations independently of other components. Second, it means scaling of capacity up or down can be targeted to the backend services that are seeing the most/least activity.
 
-As a fun experiment, we are going to build a simple UI that uses NGINX as this kind of Gateway to fetch various different page components from other backends locations ... specifically yours!
+As a fun experiment, we are going to build a simple UI that uses NGINX as this kind of Gateway to fetch various different page components from other backends locations ... specifically from each of you!
 
 ## 7.1
-In your code editor, open up /microservice-app/html
+In your code editor, look in /microservice-app/html.
 
-You won't need to edit anything in here: these files are already being served at ADDRESS_OF_DASHBOARD_HOST. They are included in this repo only for those who want to look more closely in their own time.
+You won't need to edit anything in here: This app is the 'skeleton' of a dashboard page (think 1990s desktop with custom widgets).
 
-Try going to ADDRESS_OF_DASHBOARD_HOST in your browser.
+It will be accessible by all, but only needs to be served by one single host - mine, if you're following this live (if you're following this in your own time, you can launch this dashboard with the docker-compose.yml provided).
 
-This app is the 'skeleton' of a dashboard page (think 1990s desktop with custom widgets).
+Try going to this page in your browser (ask Phil for his URL).
 
 ## 7.2
 In your code editor, open up /microservice-app/nginx.conf
@@ -600,3 +627,11 @@ Observe the 'map' context.
         /widget/example2 ADDRESS_OF_DASHBOARD_HOST:3001;
         /widget/example3 ADDRESS_OF_DASHBOARD_HOST:3002;
     }
+
+## 7.3
+
+commands to start your widget
+
+    cat ~/workdir/NGINX-Workshop/widget/nginx.conf > /etc/nginx/nginx.conf
+    sudo nginx -s reload
+    sudo nginx
