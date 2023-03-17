@@ -28,7 +28,12 @@ After successfully logging in, use the urls provided to open two tabs:
 *nb. If you want to, you can do all of this on your own machine, with your own code editor, but any configurations you may have previously made may affect the steps in the workshop.*
 
 ## 0.4 
-In your code editor, navigate to and open NGINX-Workshop/README.md. This will provide all the steps and code snippets to follow along during the workshop.
+In your code editor, navigate to and open NGINX-Workshop/README.md. This will provide all the further steps and code snippets to follow along during the workshop.
+
+## 0.5
+In your terminal run the following command to add your panda name to some files we'll be using later:
+
+    /home/playground/workdir/NGINX-Workshop/panda_name.sh <your-pandaname>
 
 
 # 1. Install NGINX
@@ -105,7 +110,7 @@ Replace the contents of the nginx.conf file:
 To take advantage of the Code Editor (and avoid using vi!!) we can edit the contents of nginx.conf like so:
 
 ### 3.2.1 
-In the **'/project/config'** directory of your Code editor, **create a new file called mynginx.conf**
+In the **'/NGINX-Workshop/config'** directory of your Code editor, **create a new file called mynginx.conf**
 
 ### 3.2.2 
 Insert (copy + paste) this code into mynginx.conf:
@@ -174,7 +179,7 @@ Add the following html (or some thing similarly basic)
     </body>
     </html>
 
-and, in nginx.conf, change the root directive;
+and, in nginx.conf, change the root directive to point to you /public folder;
 
     user playground;
     
@@ -253,26 +258,8 @@ Then check your browser at /cart.
 
 So what if we want mutliple pages? Multiple location contexts? Is there is a cleaner way?
 
-## 5.3 
-Update your nginx.conf with this:
-
-    user playground;
-
-    http {
-        server {
-            listen 80;
-            root /home/playground/workdir/NGINX-Workshop/public;
-
-            location / {
-                root /home/playground/workdir/NGINX-Workshop/public;
-            }
-        }
-    }
-
-    events {}
-
-## 5.4 
-And create folders to organise all the files for our pages, eg.
+## 5.3
+Create folders to organise files for the following pages:
 
     +-- /project
     |   +-- /config
@@ -334,11 +321,29 @@ Then, check the following in your browser
 - [your_pandaname].devopsplayground.org/cart
 - [your_pandaname].devopsplayground.org/about
 
+## 5.4 
+And update your nginx.conf with this:
+
+    user playground;
+
+    http {
+        server {
+            listen 80;
+            root /home/playground/workdir/NGINX-Workshop/public;
+
+            location / {
+                root /home/playground/workdir/NGINX-Workshop/public;
+            }
+        }
+    }
+
+    events {}
+
 # 5 Serving other files
 
 The most common types of files to serve alongside .html files are .css and .js files (and .php files but we're not going into that today) since these contain styles and logic for the web page.
 
-## 5.1 
+## 6.1 
 Add .css and .js files to your folders
 
     +-- /project
@@ -358,7 +363,7 @@ Add .css and .js files to your folders
     |          +-- script.js
     | ...
 
-## 5.2 
+## 6.2 
 In each index.html file, **add the links to styles.css and script.js** eg:
 
     <!DOCTYPE html>
@@ -378,7 +383,7 @@ In each index.html file, **add the links to styles.css and script.js** eg:
     </body>
     </html>
 
-## 5.3
+## 6.3
 In each styles.css file, **add some super-basic styling** so we can do a sense-check.
 
 styles.css:
@@ -387,26 +392,26 @@ styles.css:
         color: <choose a color>
     }
 
-## 5.4
+## 6.4
 In each script.js file, **add a console.log message** so we can do a sense-check.
 
 script.js:
 
     console.log("script loaded successfully")
 
-## 5.5 
+## 6.5 
 Check each route in your browser. Huh?
 
 Using the 'inspect' tool, looking at 'sources', we can see that 'styles.css' and script.js were loaded but styles have not been applied and (depending on your browser) the script might not have loaded. So what's going on?
 
-## 5.6 
+## 6.6 
 Let's talk about MIME types!
 
 MIME types describe the media type of content served by web servers or web applications. They are intended to help provide a hint as to how the content should be processed and displayed. These days, most browsers have the ability to 'guess' the intention of a file by either scanning it or looking at its file extension, but this is not widely applied for reasons of security and loss of control.
 
 TLDR - We need to tell the browser, when the content loads, which type of files (other than text/html) to accept.
 
-## 5.7 
+## 6.7 
 Add the following to nginx.conf:
 
 
@@ -432,7 +437,7 @@ Check your browser. Now, the .css and .js files should be accepted and working.
 
 So now we know a little bit about serving static html files, enough to explore on your own, let's look at a different feature of NGINX, loadbalancing.
 
-# 6 Load balancing
+# 7 Load balancing
 
 Diagram --> multiple backend 'worker' servers reached by one NGINX endpoint.
 
@@ -440,17 +445,17 @@ The use a of a loadbalancer is a common way to increase capacity, and the simple
 
 We could spin up multiple 'worker' hosts to see this in action, but a far more cost-effective way is using docker. Docker can create a virtual network of hosts, essentially a VPC that runs on your own machine.
 
-## 6.1 
+## 7.1 
 Stop NGINX on your machine:
 
     sudo nginx -s quit
 
-## 6.2 
+## 7.2 
 Change directory into /loadbalancer
 
     cd workdir/NGINX-Workshop/loadbalancer
 
-## 6.3 
+## 7.3 
 In your code-editor, click through the files in /loabalancer to check what's happening:
 
 In **docker-compose.yml** ...
@@ -487,7 +492,7 @@ For now, this will return something simple, too.
 
     events {}
 
-## 6.4 
+## 7.4 
 In your terminal, startup this network with docker compose:
 
     docker compose up
@@ -496,7 +501,7 @@ After a few seconds, you will see that all four containers have started. (This i
 
 If you go to your browser, you will see something reassuring, but very uninteresting.
 
-## 6.5 
+## 7.5 
 Enable reverse-proxy:
 
 Put simply, we need to tell NGINX to forward any requests onto someone else. NGINX will then be acting as a **reverse proxy**.
@@ -528,7 +533,7 @@ or, in a separate terminal
 
 Now if you go to your browser, you will see something *slightly* more interesting. The request was forwarded to worker 1 and returned to us.
 
-## 6.6 
+## 7.6 
 Enable loadbalancing:
 
 For this, we declare a list of known backend hosts. NGINX stores this list as a variable now, so we could name it any string, but this example uses the name 'backend_hosts'.
@@ -558,7 +563,7 @@ Update loadbalancer/nginx.conf to look like this:
 
 Restart the containers and check your browser. Refresh the page a few times. Wow!
 
-## 6.7 Control the backend routing
+## 7.7 Control the backend routing
 If we want to control which backend service to use, depending on the request path (instead of NGINX choosing for us), we can use a 'map' context.
 
 Update loadbalancer/nginx.conf to look like this:
@@ -598,7 +603,7 @@ And check the following routes
 - [your_pandaname].devopsplayground.org/third
 - [your_pandaname].devopsplayground.org/anything-else
 
-# 7 NGINX for microservice apps
+# 8 NGINX for microservice apps
 
 With the steps in (6), you know enough to envisage NGINX being used as a kind of API Gateway - a single server that manages the routing to multiple other backend services. These services could serve any kind of data including .json, images and videos.
 
@@ -608,7 +613,7 @@ To push infra/ops to the left, one approach we can take is a microservice archit
 
 As a fun experiment, we are going to build a simple UI that uses NGINX as this kind of Gateway to fetch various different page components from other backends locations ... specifically from each of you!
 
-## 7.1
+## 8.1
 In your code editor, look in /microservice-app/html.
 
 You won't need to edit anything in here: This app is the 'skeleton' of a dashboard page (think 1990s desktop with custom widgets).
@@ -617,21 +622,69 @@ It will be accessible by all, but only needs to be served by one single host - m
 
 Try going to this page in your browser (ask Phil for his URL).
 
-## 7.2
+## 8.2
 In your code editor, open up /microservice-app/nginx.conf
 
 Observe the 'map' context.
 
     map $uri $backend {
-        /widget/example1 ADDRESS_OF_DASHBOARD_HOST:3000;
-        /widget/example2 ADDRESS_OF_DASHBOARD_HOST:3001;
-        /widget/example3 ADDRESS_OF_DASHBOARD_HOST:3002;
+        /widget/example1 widget_1;
+        /widget/example2 widget_2;
+        /widget/example3 widget_3;
+        "~/widget/(\S+)" $1.devopsplayground.org;
     }
 
-## 7.3
+This says that, after the inital dashboard page loads, if our dashboard server receives a request to /widget/any-panda, it will forward this request onto one of you, and request whatever *you* are serving.
 
-commands to start your widget
+## 8.3
+In your browser, navigate to the dashboard, hosted by Phil: 
+
+    http://[whichever-panda-phil-is].devopsplayground.org
+
+## 8.4
+Start serving your widget from your machine.
 
     cat ~/workdir/NGINX-Workshop/widget/nginx.conf > /etc/nginx/nginx.conf
     sudo nginx -s reload
     sudo nginx
+
+## 8.5
+A few rules (to avoid hilarious but annoying conflicts).
+
+- when defining css styles, be specific
+
+    p {
+        color: red;
+    }
+
+^This would change **everyone's** < p > elements to be red!
+
+    sweet-panda-widget > p {
+        color: red;
+    }
+
+^This is better.
+
+    sweet-panda-widget > #sweet-text-p {
+        color: red;
+    }
+
+^This is **much** better.
+
+- when defining variable names or function names, avoid generic terms. Choose unique ones.
+
+    const title = document.getElementById("sweet-title")
+
+    function handleClick() {
+        ...
+    }
+
+^These would cause a conflicts if someone else has already use 'title' to store an element or 'handleClick' to define a function.
+
+    const sweetTitle = document.getElementById("sweet-title")
+
+    function handleSweetSubmitClick() {
+        ...
+    }
+
+^This is **much** better.
