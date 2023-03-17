@@ -11,7 +11,7 @@ const sampleWidgets = [
 const widgetElements = formatWidgets(sampleWidgets)
 renderWidgets(widgetElements)
 
-const pandas = ["funpanda", "sillypanda", "wrongpanda", "nginxpanda"]
+const pandas = ["example1", "example2", "example3", "funpanda", "sillypanda", "wrongpanda", "nginxpanda"]
 
 const widgetPromises = pandas.map(path => {
   return getWidget(`http://54.217.163.148/widget/${path}`)
