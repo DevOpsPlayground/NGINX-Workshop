@@ -68,6 +68,8 @@ body {
 .widget {
     margin: 0.5rem;
     padding: 0.5rem;
+    width: 90%;
+    height: 90%;
     /* display: flex;
     justify-content: center;
     align-items: center;

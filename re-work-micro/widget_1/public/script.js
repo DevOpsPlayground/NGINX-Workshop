@@ -1,1 +1,0 @@
-console.log("widget one script loaded")

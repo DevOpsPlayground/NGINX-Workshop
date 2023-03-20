@@ -9,8 +9,8 @@ services:
       - "80:80"
     command: sh -c "nginx -g 'daemon off;'"
   
-  widget_1:
-    container_name: widget_1
+  widget_one:
+    container_name: widget_one
     image: nginx:alpine
     volumes:
       - ./widget_1/public:/usr/share/nginx/html
@@ -19,8 +19,8 @@ services:
       - "3000:80"
     command: sh -c "nginx -g 'daemon off;'"
 
-  widget_2:
-    container_name: widget_2
+  widget_two:
+    container_name: widget_two
     image: nginx:alpine
     volumes:
       - ./widget_2/public:/usr/share/nginx/html
@@ -29,8 +29,8 @@ services:
       - "3001:80"
     command: sh -c "nginx -g 'daemon off;'"
 
-  widget_3:
-    container_name: widget_3
+  widget_three:
+    container_name: widget_three
     image: nginx:alpine
     volumes:
       - ./widget_3/public:/usr/share/nginx/html
