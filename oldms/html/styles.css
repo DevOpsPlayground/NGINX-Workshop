@@ -1,0 +1,79 @@
+body {
+    overflow-x: hidden;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: lightgrey;
+    color: black;
+    font-family: "PT Sans", Calibri, Tahoma, sans-serif;
+    border-radius: 50%;
+}
+
+.nav {
+    width: auto;
+    height: 3em;
+    background-color: black;
+    display: grid;
+    grid-template-columns: 5% 85% 5% 5%;
+    place-items: start;
+    margin: 0;
+}
+
+.nav-text {
+    color: lightgrey;
+}
+
+.nav button {
+    height: 85%;
+    width: 85%;
+}
+
+#yellow-button {
+    background-color: yellow;
+}
+
+.main {
+    width: auto;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 20% 80%;
+    grid-auto-rows: 100%;
+    place-items: start;
+    margin: 0;
+}
+
+.menu {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgb(96, 96, 96);
+    color: whitesmoke;
+    padding: 0.5em;
+}
+
+#widget-space {
+    margin: 0;
+    padding: 1.5em;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    grid-auto-rows: 400px;
+}
+
+.widget {
+    margin: 0.5rem;
+    padding: 0.5rem;
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 90%;
+    height: 100px; */
+    background-color: white;
+    border-radius: 1em;
+}
