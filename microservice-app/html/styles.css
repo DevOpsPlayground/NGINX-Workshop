@@ -5,7 +5,7 @@ body {
     padding: 0;
     width: 100%;
     height: 100%;
-    background-color: lightgrey;
+    background-image: linear-gradient(135deg, black, 75%, blue, red);
     color: black;
     font-family: "PT Sans", Calibri, Tahoma, sans-serif;
     border-radius: 50%;
@@ -40,7 +40,7 @@ body {
     overflow-x: auto;
     overflow-y: auto;
     display: grid;
-    grid-template-columns: 20% 80%;
+    grid-template-columns: 15% 85%;
     grid-auto-rows: 100%;
     place-items: start;
     margin: 0;
@@ -50,7 +50,7 @@ body {
     width: 100%;
     height: 100%;
     overflow-y: auto;
-    background-color: rgb(96, 96, 96);
+    background-color: rgb(27, 3, 75);
     color: whitesmoke;
     padding: 0.5em;
 }
@@ -65,17 +65,32 @@ body {
     grid-auto-rows: 400px;
 }
 
-.widget {
+.widget-frame {
     margin: 0.5rem;
     padding: 0;
     width: 90%;
     height: 90%;
-    /* display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 90%;
-    height: 100px; */
+}
+
+.widget-banner {
+    width: 100%;
+    height: 2rem;
+    border-style: solid;
+    border-color: rgb(208, 228, 245);
+    background-color: rgb(208, 228, 245);
+    border-radius: 1em 1em 0 0;
+    text-align: center;
+    align-items:center;
+    justify-content:center;
+    display: flex;
+}
+
+.widget {
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
     background-color: white;
-    border-radius: 1em;
+    border-radius: 0 0 1em 1em;
+    border-style: solid;
+    border-color: rgb(208, 228, 245);
 }

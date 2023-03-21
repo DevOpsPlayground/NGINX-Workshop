@@ -1,6 +1,6 @@
 console.log("script loaded")
 
-const hostServer = "http://INSERT_PANDA_NAME.devopsplayground.org"
+const hostServer = "http://funny-panda.devopsplayground.org"
 //^^ change this to the url or ip where this dashboard is served eg "http://localhost"^^
 
 const origins = ["example1", "example2", "example3", "funny-panda","sweet-panda","proud-panda","suited-panda",
@@ -40,7 +40,18 @@ function renderWidget(origin, key) {
     widget.className = "widget"
     widget.id = `${origin}-widget`
     widget.key = key
-    widgetSpace.appendChild(widget)
+
+    const widgetFrame = document.createElement("div")
+    widgetFrame.className = "widget-frame"
+    widgetFrame.id = `${origin}-widget`
+
+    const widgetBanner = document.createElement("div")
+    widgetBanner.className = "widget-banner"
+    widgetBanner.innerText = origin
+
+    widgetFrame.appendChild(widgetBanner)
+    widgetFrame.appendChild(widget)
+    widgetSpace.appendChild(widgetFrame)
 }
 
 // #### Menu ######
