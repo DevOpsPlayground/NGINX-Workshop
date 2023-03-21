@@ -20,7 +20,7 @@ if [[ $1 =~ [[:upper:]] ]]; then
    exit 0
 fi
 
-files_with_pandaname=("microservice-app/html/script.js" "microservice-app/widget_1/public/index.html" "microservice-app/widget_2/public/index.html" "microservice-app/widget_3/public/index.html" "widget/public/index.html")
+files_with_pandaname=("microservice-app/nginx.conf" "microservice-app/html/script.js" "microservice-app/widget_1/public/index.html" "microservice-app/widget_2/public/index.html" "microservice-app/widget_3/public/index.html" "widget/public/index.html")
 
 for file in "${files_with_pandaname[@]}"; do 
   sed -i s:INSERT_PANDA_NAME:$1:g ~/workdir/NGINX-Workshop/$file; 
