@@ -10,7 +10,7 @@ services:
     command: sh -c "nginx -g 'daemon off;'"
   
   widget_one:
-    container_name: widget_one
+    container_name: example1-panda.devopsplayground.org
     image: nginx:alpine
     volumes:
       - ./widget_1/public:/usr/share/nginx/html
@@ -20,7 +20,7 @@ services:
     command: sh -c "nginx -g 'daemon off;'"
 
   widget_two:
-    container_name: widget_two
+    container_name: example2-panda.devopsplayground.org
     image: nginx:alpine
     volumes:
       - ./widget_2/public:/usr/share/nginx/html
@@ -30,7 +30,7 @@ services:
     command: sh -c "nginx -g 'daemon off;'"
 
   widget_three:
-    container_name: widget_three
+    container_name: example3-panda.devopsplayground.org
     image: nginx:alpine
     volumes:
       - ./widget_3/public:/usr/share/nginx/html
