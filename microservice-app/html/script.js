@@ -12,7 +12,7 @@ const origins = ["example1-panda", "example2-panda", "example3-panda", "funny-pa
     "stunning-panda","musical-panda","evolved-panda","teaching-panda","artistic-panda","learning-panda",
     "singular-panda","funky-panda","optimal-panda","loving-panda","measured-panda","whole-panda","verified-panda",
     "finer-panda","glorious-panda","outgoing-panda","living-panda","refined-panda","valued-panda","champion-panda"]
-const fetchLimit = 5
+const fetchLimit = 50
 
 const widgetSpace = document.getElementById("widget-space")
 
