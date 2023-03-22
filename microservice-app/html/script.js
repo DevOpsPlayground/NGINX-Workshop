@@ -1,9 +1,9 @@
 console.log("script loaded")
 
-const hostServer = "http://funny-panda.devopsplayground.org"
+const hostServer = "http://INSERT_PANDA_NAME.devopsplayground.org"
 //^^ change this to the url or ip where this dashboard is served eg "http://localhost"^^
 
-const origins = ["example1", "example2", "example3", "funny-panda","sweet-panda","proud-panda","suited-panda",
+const origins = ["example1-panda", "example2-panda", "example3-panda", "funny-panda","sweet-panda","proud-panda","suited-panda",
     "loved-panda","firm-panda","settling-panda","premium-panda","feasible-panda","welcome-panda","pumped-panda",
     "trusty-panda","rational-panda","moving-panda","fast-panda","social-panda","logical-panda","on-panda",
     "driving-panda","perfect-panda","equal-panda","becoming-panda","still-panda","touched-panda","fair-panda",
@@ -12,14 +12,14 @@ const origins = ["example1", "example2", "example3", "funny-panda","sweet-panda"
     "stunning-panda","musical-panda","evolved-panda","teaching-panda","artistic-panda","learning-panda",
     "singular-panda","funky-panda","optimal-panda","loving-panda","measured-panda","whole-panda","verified-panda",
     "finer-panda","glorious-panda","outgoing-panda","living-panda","refined-panda","valued-panda","champion-panda"]
-const fetchLimit = 10
+const fetchLimit = 5
 
 const widgetSpace = document.getElementById("widget-space")
 
 origins.forEach((origin, i) => {
     const thisOriginRegex = new RegExp( origin, 'g' );
 
-    if (!hostServer.match(thisOriginRegex) && i < fetchLimit) {
+    if (!hostServer.match(thisOriginRegex) && i < fetchLimit && origin !== "funny-panda") {
 
         fetch(`${hostServer}/widget/${origin}`).then(response => {
             if (response.ok) {
