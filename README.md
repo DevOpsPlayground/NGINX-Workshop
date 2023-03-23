@@ -179,7 +179,7 @@ Add the following html (or some thing similarly basic)
     </body>
     </html>
 
-and, in nginx.conf, change the root directive to point to you /public folder;
+and, in mynginx.conf, change the root directive to point to you /public folder;
 
     user playground;
     
@@ -192,13 +192,16 @@ and, in nginx.conf, change the root directive to point to you /public folder;
 
     events {}
 
+and update /etc/nginx/nginx.conf
+
+    cat ~/workdir/NGINX-Workshop/config/mynginx.conf > /etc/nginx/nginx.conf
+
 ## 4.3 
 Check your browser. What happened? Why wasn't the page updated?
 
 Nothing has changed because we haven't told NGINX to 'reload' the contents of the config file.
 
-    cat ~/workdir/NGINX-Workshop/config/mynginx.conf > /etc/nginx/nginx.conf
-    nginx -s reload
+    sudo nginx -s reload
 
 Reload, then check your browser.
 
@@ -314,12 +317,6 @@ public/about/index.html
     </body>
     </html>
 
-Then, check the following in your browser
-
-- [your_pandaname].devopsplayground.org
-- [your_pandaname].devopsplayground.org/cart.html
-- [your_pandaname].devopsplayground.org/cart
-- [your_pandaname].devopsplayground.org/about
 
 ## 5.4 
 And update your nginx.conf with this:
@@ -338,6 +335,13 @@ And update your nginx.conf with this:
     }
 
     events {}
+
+Then, check the following in your browser
+
+- [your_pandaname].devopsplayground.org
+- [your_pandaname].devopsplayground.org/cart.html
+- [your_pandaname].devopsplayground.org/cart
+- [your_pandaname].devopsplayground.org/about
 
 # 5 Serving other files
 
@@ -414,6 +418,35 @@ TLDR - We need to tell the browser, when the content loads, which type of files 
 ## 6.7 
 Add the following to nginx.conf:
 
+    user playground;
+
+    http {
+
+        types {
+            text/html html;
+            text/css css;
+            application/javascript js;
+        }
+
+        server {
+            listen 80;
+            root /home/playground/workdir/NGINX-Workshop/public;
+
+            location / {
+                root /home/playground/workdir/NGINX-Workshop/public;
+            }
+        }
+    }
+
+    events {}
+
+Check your browser. Now, the .css and .js files should be accepted and working.
+
+This is good, but could get messy if we have to include a directive for avry type of file we want to server. (There are many!)
+
+## 6.8 
+Add the following to nginx.conf:
+
 
     user playground;
 
@@ -433,13 +466,11 @@ Add the following to nginx.conf:
 
     events {}
 
-Check your browser. Now, the .css and .js files should be accepted and working.
+Check your browser. Now, any files you serve will be interpreted correctly by your browser.
 
 So now we know a little bit about serving static html files, enough to explore on your own, let's look at a different feature of NGINX, loadbalancing.
 
 # 7 Load balancing
-
-Diagram --> multiple backend 'worker' servers reached by one NGINX endpoint.
 
 The use a of a loadbalancer is a common way to increase capacity, and the simplest way of managing this is a 'round robin' algorithm, where traffic is directed to the next backend worker each time a new request comes in.
 
@@ -605,7 +636,7 @@ And check the following routes
 
 # 8 NGINX for microservice apps
 
-With the steps in (6), you know enough to envisage NGINX being used as a kind of API Gateway - a single server that manages the routing to multiple other backend services. These services could serve any kind of data including .json, images and videos.
+With the steps in (7), you know enough to envisage NGINX being used as a kind of API Gateway - a single server that manages the routing to multiple other backend services. These services could serve any kind of data including .json, images and videos.
 
 Loadbalancing and backend routing are very useful features of NGINX from an infrastructure and performance perspective, obviously. But next we're going to look at something more DevOps minded.
 
@@ -628,10 +659,10 @@ In your code editor, open up /microservice-app/nginx.conf
 Observe the 'map' context.
 
     map $uri $backend {
-        /widget/example1 widget_1;
-        /widget/example2 widget_2;
-        /widget/example3 widget_3;
-        "~/widget/(\S+)" $1.devopsplayground.org;
+        ~/widget/(\S+) $1.devopsplayground.org/;
+        /widget/script.js $pandaname.devopsplayground.org/script.js;
+        /widget/styles.css $pandaname.devopsplayground.org/styles.css;
+        default not_found;
     }
 
 This says that, after the inital dashboard page loads, if our dashboard server receives a request to /widget/any-panda, it will forward this request onto one of you, and request whatever *you* are serving.
@@ -649,42 +680,7 @@ Start serving your widget from your machine.
     sudo nginx
 
 ## 8.5
-A few rules (to avoid hilarious but annoying conflicts).
 
-- when defining css styles, be specific
+    Develop your widget into something cool.
 
-    p {
-        color: red;
-    }
-
-^This would change **everyone's** < p > elements to be red!
-
-    sweet-panda-widget > p {
-        color: red;
-    }
-
-^This is better.
-
-    sweet-panda-widget > #sweet-text-p {
-        color: red;
-    }
-
-^This is **much** better.
-
-- when defining variable names or function names, avoid generic terms. Choose unique ones.
-
-    const title = document.getElementById("sweet-title")
-
-    function handleClick() {
-        ...
-    }
-
-^These would cause a conflicts if someone else has already use 'title' to store an element or 'handleClick' to define a function.
-
-    const sweetTitle = document.getElementById("sweet-title")
-
-    function handleSweetSubmitClick() {
-        ...
-    }
-
-^This is **much** better.
+    Have fun!
