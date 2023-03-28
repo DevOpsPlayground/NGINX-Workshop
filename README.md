@@ -688,3 +688,50 @@ Start serving your widget from your machine.
     Develop your widget into something cool.
 
     Have fun!
+
+
+
+**... If you like using react.js ...**
+
+**in your code editor:**
+
+- install nodejs, nvm and update npm:
+
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+        . ~/.nvm/nvm.sh
+        nvm install 16
+        npm install -g npm@9.6.2
+
+- create a react-app
+
+        npx create-react-app react-widget
+
+- perform the react build step
+
+        npm run build
+
+- change your nginx.conf file to the following:
+
+        user playground;
+
+        http {
+
+            include mime.types;
+
+            server {
+                listen 80;
+                add_header Access-Control-Allow-Origin *;
+                root /home/playground/workdir/NGINX-Workshop/<PATH_TO_YOUR_REACT_APP>/build;
+
+                location / {
+                    try_files $uri /index.html;
+                }
+            }
+        }
+
+        events {}
+
+- don't forget to 'reload' your nginx configuration:
+
+        cat ~/workdir/NGINX-Workshop/widget/nginx.conf > /etc/nginx/nginx.conf
+        sudo nginx -s reload
