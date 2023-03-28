@@ -34,7 +34,7 @@ files_with_pandaname=("microservice-app/nginx.conf" "microservice-app/html/scrip
 # done;
 
 for file in "${files_with_pandaname[@]}"; do 
-  cat ~/playground/NGINX-Workshop/templates/$file | sed s:INSERT_PANDA_NAME:$1:g > ~/playground/NGINX-Workshop/$file;
+  cat ~/workdir/NGINX-Workshop/templates/$file | sed s:INSERT_PANDA_NAME:$1:g > ~/workdir/NGINX-Workshop/$file;
 done;
 
 echo "Added: $1"
