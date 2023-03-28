@@ -662,7 +662,7 @@ Observe the 'map' context.
         ~/widget/(\S+) $1.devopsplayground.org/;
         /widget/script.js $pandaname.devopsplayground.org/script.js;
         /widget/styles.css $pandaname.devopsplayground.org/styles.css;
-        default not_found;
+        default $pandaname.devopsplayground.org$uri;
     }
 
 This says that, after the inital dashboard page loads, if our dashboard server receives a request to /widget/any-panda, it will forward this request onto one of you, and request whatever *you* are serving.
