@@ -702,12 +702,14 @@ Start serving your widget from your machine.
         nvm install 16
         npm install -g npm@9.6.2
 
-- create a react-app
+- create a react-app in /NGINX-Workshop.
 
+        cd project/NGINX-Workshop
         npx create-react-app react-widget
 
 - perform the react build step
 
+        cd react-widget
         npm run build
 
 - change your nginx.conf file to the following:
@@ -721,7 +723,7 @@ Start serving your widget from your machine.
             server {
                 listen 80;
                 add_header Access-Control-Allow-Origin *;
-                root /home/playground/workdir/NGINX-Workshop/<PATH_TO_YOUR_REACT_APP>/build;
+                root /home/playground/workdir/NGINX-Workshop/react-widget/build;
 
                 location / {
                     try_files $uri /index.html;
@@ -730,6 +732,8 @@ Start serving your widget from your machine.
         }
 
         events {}
+
+^^ check your root directive uses the right path.
 
 - don't forget to 'reload' your nginx configuration:
 
