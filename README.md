@@ -10,11 +10,13 @@ This workshop will be a hands-on introduction to NGINX (pronounced "engine-ex"),
 
 If you are taking part in this workshop live, you have been provided with a VM with all the necessary requirements.
 
+(*nb. If you want to, you can follow this workshop on your own machine, with your own code editor, in your own time. This SHOULD be fine, but any configurations you may have previously made may affect the steps in the workshop. If doing so, you can skip ahead to step 1.*)
+
 # 0. 
 Login and open Code Editor
 
 ## 0.1 
-Open your browser and go to signup.devopsplayground.org
+Open your browser and go to lab.devopsplayground.org
 
 ## 0.2 
 Login with your Meetup username (or if you joined by RSVPing to the Teams invite, use your Teams username, including any spaces)
@@ -24,8 +26,6 @@ After successfully logging in, use the urls provided to open two tabs:
 
 - a tab for your VM's terminal
 - a tab for your VM's code editor
-
-*nb. If you want to, you can do all of this on your own machine, with your own code editor, but any configurations you may have previously made may affect the steps in the workshop.*
 
 ## 0.4 
 In your code editor, navigate to and open NGINX-Workshop/README.md. This will provide all the further steps and code snippets to follow along during the workshop.
@@ -343,7 +343,7 @@ Then, check the following in your browser
 - [your_pandaname].devopsplayground.org/cart
 - [your_pandaname].devopsplayground.org/about
 
-# 5 Serving other files
+# 6 Serving other files
 
 The most common types of files to serve alongside .html files are .css and .js files (and .php files but we're not going into that today) since these contain styles and logic for the web page.
 
@@ -667,10 +667,14 @@ Observe the 'map' context.
 
 This says that, after the inital dashboard page loads, if our dashboard server receives a request to /widget/any-panda, it will forward this request onto one of you, and request whatever *you* are serving.
 
+(*If you're following this README.md in your own time, this map context should be updated to include the forwarding rules for whatever endpoints you are using (but it will already work with the three sample widgets provided).*)
+
 ## 8.3
-In your browser, navigate to the dashboard, hosted by Phil: 
+In your browser, navigate to the hosted dashboard: 
 
     http://[whichever-panda-phil-is].devopsplayground.org
+
+(*or, if following in your own time, http://localhost*)
 
 ## 8.4
 Start serving your widget from your machine.
