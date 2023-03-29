@@ -599,6 +599,7 @@ If we want to control which backend service to use, depending on the request pat
 
 Update loadbalancer/nginx.conf to look like this:
 
+
     http {
     
         upstream backend_hosts {
